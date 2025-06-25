@@ -2,7 +2,11 @@
 "use client"
 import { useState } from "react"
 
-export default function ChangePasswordModal({ isOpen, onClose }) {
+interface ChangePasswordModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProps) {
     const [oldPassword, setOldPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
