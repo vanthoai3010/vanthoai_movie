@@ -36,8 +36,8 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
             setOldPassword("")
             setNewPassword("")
             setConfirmPassword("")
-        } catch (err) {
-            setMessage(err.message)
+        } catch (err: any) {
+            setMessage(err.message);
         }
     }
 
