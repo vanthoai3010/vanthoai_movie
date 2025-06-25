@@ -3,8 +3,8 @@
 import { useState } from "react"
 
 interface ChangePasswordModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+    isOpen: boolean;
+    onClose: () => void;
 }
 export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProps) {
     const [oldPassword, setOldPassword] = useState("")
@@ -12,7 +12,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     const [confirmPassword, setConfirmPassword] = useState("")
     const [message, setMessage] = useState("")
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setMessage("")
         if (newPassword !== confirmPassword) {
