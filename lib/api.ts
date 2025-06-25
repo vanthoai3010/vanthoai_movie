@@ -49,3 +49,21 @@ export async function fetchMoviesByNation(slug: string, limit: number = 20): Pro
     return [];
   }
 }
+/* phim hoat hinh */
+
+export async function fetchMovieAnime(page: number = 1, limit: number = 20): Promise<Movie[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/v1/api/danh-sach/hoat-hinh?page=${page}`);
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    return data.data?.items ? data.data.items.slice(0, limit) : [];
+  } catch (error) {
+    console.error('Error fetching phim hoạt hình:', error);
+    return [];
+  }
+}

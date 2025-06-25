@@ -2,6 +2,9 @@ import './globals.css'
 import type { Metadata } from 'next'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { UserProvider } from "@/context/UserContext";
+import BackToTopButton from "@/components/BackToTopButton";
+
 
 export const metadata: Metadata = {
   title: 'MovieApp',
@@ -16,9 +19,12 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body className="bg-gray-900 text-gray-900 flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow p-4">{children}</main>
-        <Footer />
+        <UserProvider>
+          <Header />
+          <main className="flex-grow p-4">{children}</main>
+          <Footer />
+        </UserProvider>
+        <BackToTopButton />
       </body>
     </html>
   )
