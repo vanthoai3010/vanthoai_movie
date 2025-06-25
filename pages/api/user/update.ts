@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ message: "Invalid name" });
     }
 
-    if (!["male", "female", "other"].includes(gender)) {
+    if (!["male", "female", "other"].includes(gender as string)) {
       return res.status(400).json({ message: "Invalid gender" });
     }
 
