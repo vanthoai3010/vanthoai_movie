@@ -32,7 +32,7 @@ interface MovieData {
     poster_url?: string
     description?: string
     year?: string | number
-    country?: string | string[]
+    country?: string | { name?: string; slug?: string } | Array<string | { name?: string; slug?: string }>
     category?: Array<string | {id: string, name: string, slug: string}>
     director?: Array<string | {id: string, name: string, slug: string}>
     actor?: Array<string | {id: string, name: string, slug: string}>
@@ -358,9 +358,9 @@ export default function WatchPage() {
                     <span className="text-gray-400">Quốc gia:</span>
                     <span className="text-white">
                       {Array.isArray(data.movie.country) 
-                        ? data.movie.country.map(c => typeof c === 'object' ? c.name || c.slug : c).join(', ')
-                        : typeof data.movie.country === 'object' 
-                        ? data.movie.country.name || data.movie.country.slug || JSON.stringify(data.movie.country)
+                        ? data.movie.country.map(c => typeof c === 'object' && c !== null ? c.name || c.slug : c).join(', ')
+                        : typeof data.movie.country === 'object' && data.movie.country !== null
+                        ? (data.movie.country as { name?: string; slug?: string }).name || (data.movie.country as { name?: string; slug?: string }).slug || JSON.stringify(data.movie.country)
                         : data.movie.country
                       }
                     </span>
