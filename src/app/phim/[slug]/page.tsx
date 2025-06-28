@@ -70,9 +70,9 @@ export default function WatchPage() {
   const searchParams = useSearchParams()
   const params = useParams()
   
-  const slug = params.slug as string
-  const ss = parseInt(searchParams.get('ss') || '1')
-  const ep = parseInt(searchParams.get('ep') || '1')
+  const slug = params?.slug as string
+  const ss = parseInt(searchParams?.get('ss') || '1')
+  const ep = parseInt(searchParams?.get('ep') || '1')
   
   const [data, setData] = useState<MovieData | null>(null)
   const [loading, setLoading] = useState(true)
