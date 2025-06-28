@@ -171,7 +171,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                       placeholder="Tên của bạn"
                       value={form.name}
                       onChange={e => setForm({ ...form, name: e.target.value })}
-                      className={`w-full pl-10 pr-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                      className={`w-full pl-10 pr-4 py-3 rounded-lg text-black bg-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
                         errors.name
                           ? 'border border-red-500 focus:ring-red-400'
                           : 'border-transparent focus:ring-sky-400'
@@ -191,7 +191,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     placeholder="Email"
                     value={form.email}
                     onChange={e => setForm({ ...form, email: e.target.value })}
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg text-black bg-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
                       errors.email
                         ? 'border border-red-500 focus:ring-red-400'
                         : 'border-transparent focus:ring-sky-400'
@@ -210,7 +210,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     placeholder="Mật khẩu"
                     value={form.password}
                     onChange={e => setForm({ ...form, password: e.target.value })}
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                    className={`w-full pl-10 text-black pr-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
                       errors.password
                         ? 'border border-red-500 focus:ring-red-400'
                         : 'border-transparent focus:ring-sky-400'
