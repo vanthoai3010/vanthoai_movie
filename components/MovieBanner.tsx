@@ -55,7 +55,7 @@ const BannerSkeleton = () => (
         </div>
       </div>
     </div>
-    
+
     {/* Thumbnail Skeleton */}
     <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center px-4">
       <div className="flex gap-2 bg-black/20 p-2 rounded-xl backdrop-blur-md">
@@ -81,13 +81,13 @@ const SlideContent = ({ movie, isActive }: { movie: Movie; isActive: boolean }) 
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
         duration: 0.5,
-        ease: [0.17, 0.67, 0.83, 0.67] // cubic-bezier for easeOut
-      } 
+        transition: { duration: 5, ease: 'easeInOut' } // dùng chuỗi
+      }
     },
   }
 
@@ -100,7 +100,7 @@ const SlideContent = ({ movie, isActive }: { movie: Movie; isActive: boolean }) 
     >
       <div className="max-w-xl mt-30 text-center md:text-left">
         {/* Rating Badge */}
-        <motion.div 
+        <motion.div
           variants={itemVariants}
           className="mb-4 inline-flex items-center gap-2 bg-gradient-to-r from-yellow-500 to-amber-600 px-4 py-1.5 rounded-full"
         >
@@ -108,7 +108,7 @@ const SlideContent = ({ movie, isActive }: { movie: Movie; isActive: boolean }) 
           <span className="font-bold">9.5/10</span>
         </motion.div>
 
-        <motion.h1 
+        <motion.h1
           variants={itemVariants}
           className={`${montserrat.className} text-3xl md:text-4xl lg:text-5xl font-extrabold uppercase mb-4 leading-tight text-white drop-shadow-lg`}
         >
@@ -116,16 +116,16 @@ const SlideContent = ({ movie, isActive }: { movie: Movie; isActive: boolean }) 
             {movie.name}
           </Link>
         </motion.h1>
-        
-        <motion.h2 
-          variants={itemVariants} 
+
+        <motion.h2
+          variants={itemVariants}
           className="text-lg md:text-xl text-yellow-400 italic mb-4 font-medium"
         >
           {movie.origin_name}
         </motion.h2>
 
-        <motion.div 
-          variants={itemVariants} 
+        <motion.div
+          variants={itemVariants}
           className="flex flex-wrap justify-center md:justify-start items-center gap-x-4 gap-y-2 text-sm mb-6"
         >
           <span className="flex items-center gap-1.5 bg-black/30 px-3 py-1.5 rounded-lg backdrop-blur-sm">
@@ -140,15 +140,15 @@ const SlideContent = ({ movie, isActive }: { movie: Movie; isActive: boolean }) 
           </span>
         </motion.div>
 
-        <motion.p 
-          variants={itemVariants} 
+        <motion.p
+          variants={itemVariants}
           className="text-sm md:text-base text-slate-200 mb-8 line-clamp-3 leading-relaxed max-w-2xl"
         >
           {movie.content}
         </motion.p>
 
-        <motion.div 
-          variants={itemVariants} 
+        <motion.div
+          variants={itemVariants}
           className="flex items-center justify-center md:justify-start gap-4"
         >
           <Link href={`/xem-phim/${movie.slug}`}>
@@ -157,11 +157,11 @@ const SlideContent = ({ movie, isActive }: { movie: Movie; isActive: boolean }) 
               <span className="absolute inset-0 border-2 border-yellow-500 rounded-full animate-ping-slow opacity-0 group-hover:opacity-100 pointer-events-none" />
             </button>
           </Link>
-          
+
           <button className="w-12 h-12 cursor-pointer rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center group transition-all duration-300 backdrop-blur-sm shadow-lg">
             <Heart size={24} className="group-hover:fill-red-500 group-hover:stroke-red-500 transition-all" />
           </button>
-          
+
           <button className="w-12 h-12 cursor-pointer rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center group transition-all duration-300 backdrop-blur-sm shadow-lg">
             <Plus size={24} className="group-hover:rotate-90 transition-transform" />
           </button>
@@ -178,9 +178,9 @@ export default function MovieBanner() {
   const [activeIndex, setActiveIndex] = useState(0)
   const swiperRef = useRef<any>(null)
   const fixedSlugs = [
-    'tro-choi-con-muc-phan-3', 
-    'cung-dien-ma-am', 
-    'lanh-dia-tu-chien', 
+    'tro-choi-con-muc-phan-3',
+    'cung-dien-ma-am',
+    'lanh-dia-tu-chien',
     'one-nguoi-hung-trung-hoc',
     'so-canh-sat-chicago-phan-11',
     'tham-tu-lung-danh-conan-25-nang-dau-halloween',
@@ -299,9 +299,8 @@ export default function MovieBanner() {
           <button
             key={index}
             onClick={() => swiperRef.current?.slideToLoop(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === activeIndex ? 'bg-yellow-400 scale-125' : 'bg-white/50'
-            }`}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${index === activeIndex ? 'bg-yellow-400 scale-125' : 'bg-white/50'
+              }`}
           />
         ))}
       </div>
