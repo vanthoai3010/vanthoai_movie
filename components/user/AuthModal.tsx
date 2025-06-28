@@ -1,102 +1,99 @@
 // components/AuthModal.tsx
 'use client'
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, CheckCircle, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  X,
+  CheckCircle,
+  AlertTriangle,
+  User,
+  Mail,
+  Lock
+} from 'lucide-react'
 
 interface AuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen: boolean
+  onClose: () => void
 }
 
-// Kiểu dữ liệu cho thông báo
 type NotificationType = {
-  message: string;
-  type: 'success' | 'error';
-};
+  message: string
+  type: 'success' | 'error'
+}
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const [isLogin, setIsLogin] = useState(true);
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [notification, setNotification] = useState<NotificationType | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLogin, setIsLogin] = useState(true)
+  const [form, setForm] = useState({ name: '', email: '', password: '' })
+  const [errors, setErrors] = useState<{ [k: string]: string }>({})
+  const [notification, setNotification] =
+    useState<NotificationType | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
-  // Reset state khi chuyển tab hoặc đóng modal
   useEffect(() => {
     if (isOpen) {
-      setErrors({});
-      setNotification(null);
-      setForm({ name: '', email: '', password: '' });
+      setErrors({})
+      setNotification(null)
+      setForm({ name: '', email: '', password: '' })
     }
-  }, [isLogin, isOpen]);
-  
-  // Hàm validate form
+  }, [isLogin, isOpen])
+
   const validate = () => {
-    const newErrors: { [key: string]: string } = {};
-    
-    if (!isLogin && !form.name.trim()) {
-      newErrors.name = 'Vui lòng nhập tên của bạn.';
-    }
-    
-    if (!form.email) {
-      newErrors.email = 'Vui lòng nhập email.';
-    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
-      newErrors.email = 'Địa chỉ email không hợp lệ.';
-    }
-    
-    if (!form.password) {
-      newErrors.password = 'Vui lòng nhập mật khẩu.';
-    } else if (form.password.length < 6) {
-      newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự.';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    const newErr: { [k: string]: string } = {}
+    if (!isLogin && !form.name.trim())
+      newErr.name = 'Vui lòng nhập tên của bạn.'
+    if (!form.email) newErr.email = 'Vui lòng nhập email.'
+    else if (!/\S+@\S+\.\S+/.test(form.email))
+      newErr.email = 'Email không hợp lệ.'
+    if (!form.password) newErr.password = 'Vui lòng nhập mật khẩu.'
+    else if (form.password.length < 6)
+      newErr.password = 'Mật khẩu tối thiểu 6 ký tự.'
+    setErrors(newErr)
+    return Object.keys(newErr).length === 0
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setNotification(null);
-
-    if (!validate()) {
-      return;
-    }
-
-    setIsLoading(true);
-
-    const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-    const payload = isLogin ? { email: form.email, password: form.password } : form;
-
+    e.preventDefault()
+    if (!validate()) return
+    setIsLoading(true)
+    setNotification(null)
+    const ep = isLogin ? '/api/auth/login' : '/api/auth/register'
     try {
-      const res = await fetch(endpoint, {
+      const res = await fetch(ep, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-
+        body: JSON.stringify(isLogin ? { email: form.email, password: form.password } : form)
+      })
+      const data = await res.json()
       if (res.ok) {
         if (isLogin) {
-          localStorage.setItem('token', data.token);
-          setNotification({ message: 'Đăng nhập thành công!', type: 'success' });
+          localStorage.setItem('token', data.token)
+          setNotification({ message: 'Đăng nhập thành công!', type: 'success' })
           setTimeout(() => {
-            onClose();
-            window.location.reload();
-          }, 1500); // Đợi 1.5s để user thấy thông báo
+            onClose()
+            window.location.reload()
+          }, 1200)
         } else {
-          setNotification({ message: '🎉 Đăng ký thành công! Vui lòng đăng nhập.', type: 'success' });
-          setIsLogin(true); // Tự động chuyển sang tab đăng nhập
+          setNotification({ message: '🎉 Đăng ký thành công! Hãy đăng nhập.', type: 'success' })
+          setIsLogin(true)
         }
       } else {
-        setNotification({ message: data.message || 'Đã có lỗi xảy ra.', type: 'error' });
+        setNotification({ message: data.message || 'Đã có lỗi xảy ra.', type: 'error' })
       }
-    } catch (error) {
-      setNotification({ message: 'Không thể kết nối đến máy chủ.', type: 'error' });
+    } catch {
+      setNotification({ message: 'Không thể kết nối đến server.', type: 'error' })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0, transition: { staggerChildren: 0.05 } }
+  }
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0 }
+  }
 
   return (
     <AnimatePresence>
@@ -105,104 +102,156 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
         >
           <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 50 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 50 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="bg-white p-6 md:p-8 rounded-xl w-full max-w-md relative text-slate-800 shadow-xl"
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            exit="hidden"
+            className="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden"
           >
+            {/* Close */}
             <button
               onClick={onClose}
-              className="absolute cursor-pointer top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
               aria-label="Đóng"
+              className="absolute cursor-pointer top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
             >
               <X size={24} />
             </button>
 
-            <h2 className="text-2xl font-bold mb-6 text-center text-slate-900">
-              {isLogin ? 'Chào mừng trở lại' : 'Tạo tài khoản mới'}
-            </h2>
+            {/* Tabs */}
+            <div className="flex">
+              {['Đăng nhập', 'Đăng ký'].map((tab, idx) => (
+                <button
+                  key={tab}
+                  onClick={() => setIsLogin(idx === 0)}
+                  className={`flex-1 py-3 text-center font-medium transition-all ${
+                    (isLogin && idx === 0) || (!isLogin && idx === 1)
+                      ? 'border-b-4 border-sky-500 text-sky-600'
+                      : 'text-gray-500'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* --- Thông báo --- */}
+            <motion.form
+              onSubmit={handleSubmit}
+              className="px-6 py-8 sm:px-8"
+              variants={containerVariants}
+            >
+              {/* Notification */}
               {notification && (
-                <div className={`flex items-center p-3 rounded-md text-sm ${
-                    notification.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                }`}>
-                  {notification.type === 'success' ? <CheckCircle className="mr-2" size={20}/> : <AlertTriangle className="mr-2" size={20}/>}
+                <motion.div
+                  variants={itemVariants}
+                  className={`flex items-center gap-2 mb-4 p-3 rounded-lg text-sm ${
+                    notification.type === 'success'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {notification.type === 'success' ? (
+                    <CheckCircle size={20} />
+                  ) : (
+                    <AlertTriangle size={20} />
+                  )}
                   {notification.message}
-                </div>
+                </motion.div>
               )}
-              
-              {/* --- Input Tên --- */}
-              {!isLogin && (
-                <div>
+
+              <motion.div variants={itemVariants} className="space-y-4">
+                {/* Name */}
+                {!isLogin && (
+                  <div className="relative">
+                    <User className="absolute top-3 left-3 text-gray-400" size={18} />
+                    <input
+                      type="text"
+                      placeholder="Tên của bạn"
+                      value={form.name}
+                      onChange={e => setForm({ ...form, name: e.target.value })}
+                      className={`w-full pl-10 pr-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                        errors.name
+                          ? 'border border-red-500 focus:ring-red-400'
+                          : 'border-transparent focus:ring-sky-400'
+                      }`}
+                    />
+                    {errors.name && (
+                      <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Email */}
+                <div className="relative">
+                  <Mail className="absolute top-3 left-3 text-gray-400" size={18} />
                   <input
-                    type="text"
-                    placeholder="Tên của bạn"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className={`w-full border px-4 py-3 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 transition-all ${
-                      errors.name ? 'border-red-500 focus:ring-red-400' : 'border-slate-200 focus:ring-sky-400'
+                    type="email"
+                    placeholder="Email"
+                    value={form.email}
+                    onChange={e => setForm({ ...form, email: e.target.value })}
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                      errors.email
+                        ? 'border border-red-500 focus:ring-red-400'
+                        : 'border-transparent focus:ring-sky-400'
                     }`}
                   />
-                  {errors.name && <p className="text-red-500 text-xs font-bold mt-1 ml-1">{errors.name}</p>}
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
                 </div>
-              )}
 
-              {/* --- Input Email --- */}
-              <div>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className={`w-full border px-4 py-3 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 transition-all ${
-                    errors.email ? 'border-red-500 focus:ring-red-400' : 'border-slate-200 focus:ring-sky-400'
-                  }`}
-                />
-                {errors.email && <p className="text-red-500 text-xs font-bold mt-1 ml-1">{errors.email}</p>}
-              </div>
+                {/* Password */}
+                <div className="relative">
+                  <Lock className="absolute top-3 left-3 text-gray-400" size={18} />
+                  <input
+                    type="password"
+                    placeholder="Mật khẩu"
+                    value={form.password}
+                    onChange={e => setForm({ ...form, password: e.target.value })}
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                      errors.password
+                        ? 'border border-red-500 focus:ring-red-400'
+                        : 'border-transparent focus:ring-sky-400'
+                    }`}
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                  )}
+                </div>
 
-              {/* --- Input Mật khẩu --- */}
-              <div>
-                <input
-                  type="password"
-                  placeholder="Mật khẩu"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className={`w-full border px-4 py-3 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 transition-all ${
-                    errors.password ? 'border-red-500 focus:ring-red-400' : 'border-slate-200 focus:ring-sky-400'
-                  }`}
-                />
-                {errors.password && <p className="text-red-500  text-xs font-bold mt-1 ml-1">{errors.password}</p>}
-              </div>
-              
-              {/* --- Nút Submit --- */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full cursor-pointer bg-sky-500 hover:bg-sky-600 disabled:bg-sky-300 disabled:cursor-not-allowed text-white px-4 py-3 rounded-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
-              >
-                {isLoading ? 'Đang xử lý...' : (isLogin ? 'Đăng nhập' : 'Đăng ký')}
-              </button>
-            </form>
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-3 text-white font-semibold rounded-lg transition-colors bg-sky-500 hover:bg-sky-600 disabled:bg-sky-300 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-sky-500"
+                >
+                  {isLoading
+                    ? 'Đang xử lý...'
+                    : isLogin
+                    ? 'Đăng nhập'
+                    : 'Đăng ký'}
+                </button>
+              </motion.div>
+            </motion.form>
 
-            <p className="mt-6 text-sm text-center text-slate-500">
+            {/* Footer */}
+            <motion.div
+              variants={itemVariants}
+              className="border-t border-gray-200 dark:border-gray-700 px-6 py-4 text-center text-sm text-gray-500"
+            >
               {isLogin ? 'Chưa có tài khoản?' : 'Đã có tài khoản?'}{' '}
               <button
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-sky-600 font-semibold cursor-pointer hover:underline"
+                className="text-sky-600 font-semibold hover:underline"
               >
                 {isLogin ? 'Đăng ký ngay' : 'Đăng nhập'}
               </button>
-            </p>
+            </motion.div>
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  )
 }
