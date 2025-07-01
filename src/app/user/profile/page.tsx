@@ -47,8 +47,8 @@ export default function UserUpdateFormWrapper() {
       try {
         const decoded = parseJwt(token);
         setUser({
-          name: decoded.name,
-          email: decoded.email,
+          name: decoded.name || 'User',
+          email: decoded.email || '',
           avatar: decoded.avatar,
           gender: decoded.gender || "other",
         });
@@ -196,7 +196,7 @@ function Sidebar({ user, onLogout, isOpen, onClose }: {
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900"></div>
             </div>
             <div className="ml-3">
-              <p className="font-semibold text-white">{user.name}</p>
+              <p className="font-semibold text-white">{user.name || 'User'}</p>
               <p className="text-gray-400 text-sm">{user.email}</p>
             </div>
           </div>
@@ -257,13 +257,13 @@ function UserUpdateForm({ user, setUser, setShowPasswordModal, showPasswordModal
         localStorage.setItem("token", data.newToken);
         const decoded = parseJwt(data.newToken);
         const updatedUser = {
-          name: decoded.name,
-          email: decoded.email,
+          name: decoded.name || 'User',
+          email: decoded.email || '',
           avatar: decoded.avatar,
           gender: decoded.gender || "other",
         };
         setUser(updatedUser);
-        setFormData({ name: updatedUser.name, gender: updatedUser.gender });
+        setFormData({ name: updatedUser.name || 'User', gender: updatedUser.gender || 'other' });
       }
 
       setMessage({ text: "Cập nhật thành công!", type: "success" });

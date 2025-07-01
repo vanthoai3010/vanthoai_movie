@@ -108,15 +108,15 @@ export default function Header() {
                   {user.avatar ? (
                     <img
                       src={user.avatar}
-                      alt={user.name}
+                      alt={user.name || 'User avatar'}
                       className="w-9 h-9 rounded-full object-cover border-2 border-transparent hover:border-yellow-400 transition-all"
                     />
                   ) : (
                     <div className="bg-gradient-to-r from-yellow-500 to-amber-600 text-black rounded-full w-9 h-9 flex items-center justify-center font-bold uppercase text-sm">
-                      {user.name.charAt(0)}
+                      {user.name?.charAt(0) || 'U'}
                     </div>
                   )}
-                  <span className="hidden lg:inline max-w-[120px] truncate">{user.name}</span>
+                  <span className="hidden lg:inline max-w-[120px] truncate">{user.name || 'User'}</span>
                 </button>
               ) : (
                 <button 
@@ -140,16 +140,16 @@ export default function Header() {
                       {user.avatar ? (
                         <img
                           src={user.avatar}
-                          alt={user.name}
+                          alt={user.name || 'User avatar'}
                           className="w-10 h-10 rounded-full object-cover"
                         />
                       ) : (
                         <div className="bg-gradient-to-r from-yellow-500 to-amber-600 text-black rounded-full w-10 h-10 flex items-center justify-center font-bold uppercase">
-                          {user.name.charAt(0)}
+                          {user.name?.charAt(0) || 'U'}
                         </div>
                       )}
                       <div>
-                        <p className="font-medium text-white">{user.name}</p>
+                        <p className="font-medium text-white">{user.name || 'User'}</p>
                         <p className="text-xs text-gray-400">{user.email}</p>
                       </div>
                     </div>
@@ -232,7 +232,7 @@ export default function Header() {
                       <>
                         <Link href="/user/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors" onClick={closeMenu}>
                           <User2 size={20} className="text-yellow-500" />
-                          <span>Tài khoản: {user.name}</span>
+                          <span>Tài khoản: {user.name || 'User'}</span>
                         </Link>
                         <Link href="/user/favorites" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors" onClick={closeMenu}>
                           <Heart size={20} className="text-yellow-500" />

@@ -21,18 +21,22 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decoded = JSON.parse(atob(token.split(".")[1]));
-        setUser({
-          name: decoded.name,
-          email: decoded.email,
-          avatar: decoded.avatar,
-          gender: decoded.gender || "other",
-        });
-      } catch {
-        setUser(null);
+    // Chỉ chạy trên client-side
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decoded = JSON.parse(atob(token.split(".")[1]));
+          setUser({
+            name: decoded.name || 'User',
+            email: decoded.email || '',
+            avatar: decoded.avatar,
+            gender: decoded.gender || "other",
+          });
+        } catch {
+          localStorage.removeItem("token");
+          setUser(null);
+        }
       }
     }
   }, []);
